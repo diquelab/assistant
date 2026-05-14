@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회의 결과 - 김비서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            color: #333;
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #e0e0e0;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        body.dark-mode header {
+            background: rgba(15, 15, 35, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #7bc43f;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #6ab030;
+            transform: translateX(-5px);
+        }
+
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            background: rgba(123, 196, 63, 0.2);
+            border: 1px solid rgba(123, 196, 63, 0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(123, 196, 63, 0.15);
+            border-color: rgba(123, 196, 63, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(123, 196, 63, 0.3);
+        }
+
+        .toggle-circle {
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        body.dark-mode .toggle-circle {
+            background: #1a1a3e;
+            transform: translateX(30px);
+            color: #ffd700;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .document-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .document-title h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        body.dark-mode .document-title h1 {
+            color: #ffffff;
+        }
+
+        .document-title .subtitle {
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        body.dark-mode .document-title .subtitle {
+            color: #b0b0b0;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .section h2 {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #7bc43f;
+            padding-bottom: 10px;
+        }
+
+        body.dark-mode .section h2 {
+            color: #ffffff;
+            border-bottom-color: rgba(123, 196, 63, 0.6);
+        }
+
+        /* 회의 기본 정보 */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: rgba(123, 196, 63, 0.08);
+            border-radius: 12px;
+            border-left: 4px solid #7bc43f;
+        }
+
+        body.dark-mode .info-item {
+            background: rgba(123, 196, 63, 0.1);
+            border-left-color: rgba(123, 196, 63, 0.6);
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.dark-mode .info-label {
+            color: #b0b0b0;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        body.dark-mode .info-value {
+            color: #ffffff;
+        }
+
+        /* 논의 내용 */
+        .summary-text {
+            font-size: 1em;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        body.dark-mode .summary-text {
+            color: #c0c0c0;
+        }
+
+        .summary-text p {
+            margin-bottom: 12px;
+        }
+
+        /* 액션 아이템 테이블 */
+        .action-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .action-table thead {
+            background: linear-gradient(135deg, #7bc43f 0%, #6ab030 100%);
+        }
+
+        .action-table th {
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .action-table tbody tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            transition: background 0.2s ease;
+        }
+
+        body.dark-mode .action-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-table tbody tr:hover {
+            background: rgba(123, 196, 63, 0.08);
+        }
+
+        body.dark-mode .action-table tbody tr:hover {
+            background: rgba(123, 196, 63, 0.1);
+        }
+
+        .action-table td {
+            padding: 15px;
+            font-size: 0.95em;
+        }
+
+        .action-table td:first-child {
+            font-weight: 600;
+            color: #7bc43f;
+        }
+
+        body.dark-mode .action-table td:first-child {
+            color: #9dda6f;
+        }
+
+        .deadline {
+            background: rgba(255, 152, 0, 0.1);
+            color: #e65100;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        body.dark-mode .deadline {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ffb366;
+        }
+
+        /* 푸터 */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        body.dark-mode .footer {
+            color: #b0b0b0;
+        }
+
+        .print-button {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #7bc43f 0%, #6ab030 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(123, 196, 63, 0.4);
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(123, 196, 63, 0.6);
+        }
+
+        /* 인쇄 스타일 */
+        @media print {
+            body {
+                background: white;
+                color: #000;
+            }
+
+            header, .print-button {
+                display: none;
+            }
+
+            .section {
+                background: white;
+                border: 1px solid #ddd;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .action-table {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* 탭 네비게이션 */
+        .tab-nav {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 10px;
+            padding-top: 4px;
+        }
+        body.dark-mode .tab-nav {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-nav-inner::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            padding: 10px 18px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #777;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn:hover { color: #7bc43f; background: rgba(123, 196, 63, 0.07); }
+        .tab-btn.active { color: #7bc43f; border-bottom-color: #7bc43f; background: rgba(123, 196, 63, 0.1); }
+        body.dark-mode .tab-btn { color: #888; }
+        body.dark-mode .tab-btn:hover { color: #9dda6f; background: rgba(123, 196, 63, 0.12); }
+        body.dark-mode .tab-btn.active { color: #9dda6f; border-bottom-color: rgba(123, 196, 63, 0.7); background: rgba(123, 196, 63, 0.12); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="dashboard.html" class="back-link">← 대시보드</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">
+                <div class="toggle-circle">☀️</div>
+            </button>
+        </div>
+        <nav class="tab-nav">
+            <div class="tab-nav-inner">
+                <a href="dashboard.html" class="tab-btn">🏠 대시보드</a>
+                <a href="meeting-result.html" class="tab-btn active">📋 회의록</a>
+                <a href="chart.html" class="tab-btn">📈 매출 현황</a>
+                <a href="diagram.html" class="tab-btn">🔄 업무 프로세스</a>
+                <a href="report.html" class="tab-btn">🔍 사이트 분석</a>
+                <a href="design-guide.html" class="tab-btn">🎨 디자인 가이드</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="document-title">
+            <h1>📋 회의 결과 보고서</h1>
+            <p class="subtitle">주간 마케팅 회의 & 프로젝트 진행 회의</p>
+        </div>
+
+        <!-- 회의 기본 정보 -->
+        <div class="section">
+            <h2>회의 기본 정보</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">📅 회의 날짜</div>
+                    <div class="info-value">2026년 3월 10일 ~ 14일</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">👥 참석자</div>
+                    <div class="info-value">마케팅팀, 디자인팀, 광고 대행사</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">📍 회의 유형</div>
+                    <div class="info-value">주간 정기 회의</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 논의 내용 요약 -->
+        <div class="section">
+            <h2>논의 내용 요약</h2>
+            <div class="summary-text">
+                <p>• <strong>3월 프로모션 기획</strong>: 봄맞이 할인 이벤트를 3월 20일부터 31일까지 진행하기로 확정. 프로모션 기획안은 3월 10일 완료 예정이며, 인플루언서 협업을 통한 마케팅 추진 계획 수립.</p>
+
+                <p>• <strong>신제품 런칭 전략</strong>: 4월 첫째 주를 목표로 신제품 런칭을 추진하며, 3월 넷째 주부터 사전 티저 콘텐츠 시작. 신제품 런칭 킥오프 미팅을 통해 팀 간 연계 강화.</p>
+
+                <p>• <strong>콘텐츠 제작 및 영상 광고</strong>: 영상 광고 B안(영상형) 기반으로 3개 추가 제작하며, 유튜브 채널 리뉴얼을 최종 검토. SNS 콘텐츠와 다음 주 콘텐츠 캘린더 확정.</p>
+
+                <p>• <strong>고객 engagement</strong>: 고객 설문조사 결과를 공유하고 분석하여 향후 마케팅 전략 수립. 파트너사 계약서 검토 완료.</p>
+            </div>
+        </div>
+
+        <!-- 액션 아이템 -->
+        <div class="section">
+            <h2>액션 아이템</h2>
+            <table class="action-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">담당자</th>
+                        <th style="width: 45%;">할 일</th>
+                        <th style="width: 30%;">기한</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>김대리</td>
+                        <td>3월 프로모션 기획안 최종 작성</td>
+                        <td><span class="deadline">2026-03-10</span></td>
+                    </tr>
+                    <tr>
+                        <td>정팀장</td>
+                        <td>신제품 런칭 사전 티저 콘텐츠 기획</td>
+                        <td><span class="deadline">2026-03-18</span></td>
+                    </tr>
+                    <tr>
+                        <td>박사원</td>
+                        <td>영상 광고 3개 제작 (B안 기반)</td>
+                        <td><span class="deadline">2026-03-14</span></td>
+                    </tr>
+                    <tr>
+                        <td>박사원</td>
+                        <td>유튜브 채널 리뉴얼 최종 검토</td>
+                        <td><span class="deadline">2026-03-14</span></td>
+                    </tr>
+                    <tr>
+                        <td>이과장</td>
+                        <td>인플루언서 미팅 일정 확정</td>
+                        <td><span class="deadline">2026-03-12</span></td>
+                    </tr>
+                    <tr>
+                        <td>김대리</td>
+                        <td>다음 주 콘텐츠 캘린더 확정</td>
+                        <td><span class="deadline">2026-03-14</span></td>
+                    </tr>
+                    <tr>
+                        <td>정팀장</td>
+                        <td>고객 설문 결과 분석 완료</td>
+                        <td><span class="deadline">2026-03-13</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="print-button" onclick="window.print()">🖨️ 인쇄</button>
+
+        <div class="footer">
+            <p>김비서 회의 결과 보고서 | 생성일: 2026년 3월 10일</p>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+
+        // 저장된 테마 설정 불러오기
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // 테마 토글 버튼 클릭 이벤트
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" width="800" height="200">
+  <defs>
+    <style>
+      .step-box {
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        transition: all 0.3s ease;
+      }
+      .step-box:hover {
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+      }
+      .step-text {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        color: #333;
+      }
+      .arrow {
+        fill: none;
+        stroke: #999;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .arrow-head {
+        fill: #999;
+      }
+    </style>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="800" height="200" fill="white" opacity="0.5"/>
+
+  <!-- 1단계: 기획 -->
+  <g class="step-box">
+    <rect x="20" y="60" width="120" height="80" rx="15" ry="15" fill="#A8D8FF" stroke="#7ABCE8" stroke-width="2"/>
+    <text x="80" y="100" class="step-text">기획</text>
+    <text x="80" y="120" style="font-size: 12px; text-anchor: middle; fill: #666;">계획 수립</text>
+  </g>
+
+  <!-- 화살표 1→2 -->
+  <g>
+    <line x1="145" y1="100" x2="165" y2="100" class="arrow"/>
+    <polygon points="175,100 165,95 165,105" class="arrow-head"/>
+  </g>
+
+  <!-- 2단계: 제작 -->
+  <g class="step-box">
+    <rect x="180" y="60" width="120" height="80" rx="15" ry="15" fill="#A8E6A8" stroke="#7DD87D" stroke-width="2"/>
+    <text x="240" y="100" class="step-text">제작</text>
+    <text x="240" y="120" style="font-size: 12px; text-anchor: middle; fill: #666;">콘텐츠 개발</text>
+  </g>
+
+  <!-- 화살표 2→3 -->
+  <g>
+    <line x1="305" y1="100" x2="325" y2="100" class="arrow"/>
+    <polygon points="335,100 325,95 325,105" class="arrow-head"/>
+  </g>
+
+  <!-- 3단계: 검토 -->
+  <g class="step-box">
+    <rect x="340" y="60" width="120" height="80" rx="15" ry="15" fill="#FFE8A8" stroke="#FFD878" stroke-width="2"/>
+    <text x="400" y="100" class="step-text">검토</text>
+    <text x="400" y="120" style="font-size: 12px; text-anchor: middle; fill: #666;">품질 확인</text>
+  </g>
+
+  <!-- 화살표 3→4 -->
+  <g>
+    <line x1="465" y1="100" x2="485" y2="100" class="arrow"/>
+    <polygon points="495,100 485,95 485,105" class="arrow-head"/>
+  </g>
+
+  <!-- 4단계: 배포 -->
+  <g class="step-box">
+    <rect x="500" y="60" width="120" height="80" rx="15" ry="15" fill="#FFD8A8" stroke="#FFC878" stroke-width="2"/>
+    <text x="560" y="100" class="step-text">배포</text>
+    <text x="560" y="120" style="font-size: 12px; text-anchor: middle; fill: #666;">서비스 제공</text>
+  </g>
+
+  <!-- 화살표 4→5 -->
+  <g>
+    <line x1="625" y1="100" x2="645" y2="100" class="arrow"/>
+    <polygon points="655,100 645,95 645,105" class="arrow-head"/>
+  </g>
+
+  <!-- 5단계: 분석 -->
+  <g class="step-box">
+    <rect x="660" y="60" width="120" height="80" rx="15" ry="15" fill="#FFB3D9" stroke="#FF99CC" stroke-width="2"/>
+    <text x="720" y="100" class="step-text">분석</text>
+    <text x="720" y="120" style="font-size: 12px; text-anchor: middle; fill: #666;">결과 평가</text>
+  </g>
+
+  <!-- 범례 -->
+  <g style="opacity: 0.7;">
+    <text x="20" y="190" style="font-size: 11px; fill: #999;">👉 각 단계별 파스텔 색상으로 명확한 구분 | 마우스 호버 시 강조 효과</text>
+  </g>
+</svg>

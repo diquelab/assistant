@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김비서를 소개합니다</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            color: #333;
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #e0e0e0;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 20px 40px;
+            position: relative;
+        }
+
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            background: rgba(123, 196, 63, 0.2);
+            border: 1px solid rgba(123, 196, 63, 0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(123, 196, 63, 0.15);
+            border-color: rgba(123, 196, 63, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(123, 196, 63, 0.3);
+        }
+
+        .toggle-circle {
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        body.dark-mode .toggle-circle {
+            background: #1a1a3e;
+            transform: translateX(30px);
+            color: #ffd700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode h1 {
+            color: #ffffff;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 60px;
+            line-height: 1.8;
+        }
+
+        body.dark-mode .subtitle {
+            color: #b0b0b0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 40px 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 4px solid #7bc43f;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        body.dark-mode .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        body.dark-mode .feature-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 16px 48px rgba(123, 196, 63, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        body.dark-mode .feature-card h3 {
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        body.dark-mode .feature-card p {
+            color: #c0c0c0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #7bc43f 0%, #6ab030 100%);
+            color: white;
+            padding: 18px 50px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(123, 196, 63, 0.4);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(123, 196, 63, 0.6);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">
+            <div class="toggle-circle">☀️</div>
+        </button>
+    </header>
+
+    <div class="container">
+        <h1>김비서를 소개합니다</h1>
+
+        <div class="subtitle">
+            <p>업무 효율을 높이고, 일정을 관리하며, 성과를 한눈에 파악할 수 있는<br>
+            <strong>당신의 똑똑한 업무 파트너</strong></p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">✓</div>
+                <h3>스마트 업무 관리</h3>
+                <p>우선순위별로 정리된 할 일 목록으로 중요한 업무를 놓치지 않습니다.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>주간 일정 추적</h3>
+                <p>회의부터 마감까지 한주의 일정을 한눈에 파악합니다.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>성과 대시보드</h3>
+                <p>프로젝트 진행률과 매출 현황으로 성과를 시각화합니다.</p>
+            </div>
+        </div>
+
+        <a href="dashboard.html" class="cta-button">내 대시보드 보기</a>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+
+        // 저장된 테마 설정 불러오기
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // 테마 토글 버튼 클릭 이벤트
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+        });
+    </script>
+</body>
+</html>

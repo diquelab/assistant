@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubTrackr 사이트 분석 보고서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            color: #333;
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #e0e0e0;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        body.dark-mode header {
+            background: rgba(15, 15, 35, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #7bc43f;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #6ab030;
+            transform: translateX(-5px);
+        }
+
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            background: rgba(123, 196, 63, 0.2);
+            border: 1px solid rgba(123, 196, 63, 0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(123, 196, 63, 0.15);
+            border-color: rgba(123, 196, 63, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(123, 196, 63, 0.3);
+        }
+
+        .toggle-circle {
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        body.dark-mode .toggle-circle {
+            background: #1a1a3e;
+            transform: translateX(30px);
+            color: #ffd700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .report-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .report-title h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #7bc43f 0%, #6ab030 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode .report-title h1 {
+            -webkit-text-fill-color: unset;
+            color: #ffffff;
+        }
+
+        .report-title p {
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        body.dark-mode .report-title p {
+            color: #b0b0b0;
+        }
+
+        .report-meta {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        body.dark-mode .report-meta {
+            color: #b0b0b0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1100px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+        }
+
+        body.dark-mode .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        body.dark-mode .card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 16px 48px rgba(123, 196, 63, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #7bc43f;
+            padding-bottom: 15px;
+        }
+
+        body.dark-mode .card-title {
+            color: #ffffff;
+            border-bottom-color: rgba(123, 196, 63, 0.6);
+        }
+
+        .card-content {
+            color: #555;
+        }
+
+        body.dark-mode .card-content {
+            color: #c0c0c0;
+        }
+
+        .item-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .item-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 15px;
+        }
+
+        body.dark-mode .item-list li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+        }
+
+        .item-bullet {
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7bc43f 0%, #6ab030 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .item-text {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        body.dark-mode .item-title {
+            color: #ffffff;
+        }
+
+        .item-desc {
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        body.dark-mode .item-desc {
+            color: #b0b0b0;
+        }
+
+        .pros-list {
+            background: rgba(76, 175, 80, 0.08);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4caf50;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .pros-list {
+            background: rgba(76, 175, 80, 0.12);
+            border-left-color: rgba(76, 175, 80, 0.6);
+        }
+
+        .cons-list {
+            background: rgba(244, 67, 54, 0.08);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f44336;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .cons-list {
+            background: rgba(244, 67, 54, 0.12);
+            border-left-color: rgba(244, 67, 54, 0.6);
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #7bc43f 0%, #6ab030 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            box-shadow: 0 8px 32px rgba(123, 196, 63, 0.3);
+        }
+
+        .summary-box h2 {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+        }
+
+        .summary-text {
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 5px 5px 5px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            header {
+                display: none;
+            }
+
+            .card {
+                background: white;
+                border: 1px solid #ddd;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .summary-box {
+                break-inside: avoid;
+            }
+        }
+
+        /* 탭 네비게이션 */
+        .tab-nav {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 10px;
+            padding-top: 4px;
+        }
+        body.dark-mode .tab-nav {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-nav-inner::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            padding: 10px 18px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #777;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn:hover { color: #7bc43f; background: rgba(123, 196, 63, 0.07); }
+        .tab-btn.active { color: #7bc43f; border-bottom-color: #7bc43f; background: rgba(123, 196, 63, 0.1); }
+        body.dark-mode .tab-btn { color: #888; }
+        body.dark-mode .tab-btn:hover { color: #9dda6f; background: rgba(123, 196, 63, 0.12); }
+        body.dark-mode .tab-btn.active { color: #9dda6f; border-bottom-color: rgba(123, 196, 63, 0.7); background: rgba(123, 196, 63, 0.12); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="dashboard.html" class="back-link">← 대시보드</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">
+                <div class="toggle-circle">☀️</div>
+            </button>
+        </div>
+        <nav class="tab-nav">
+            <div class="tab-nav-inner">
+                <a href="dashboard.html" class="tab-btn">🏠 대시보드</a>
+                <a href="meeting-result.html" class="tab-btn">📋 회의록</a>
+                <a href="chart.html" class="tab-btn">📈 매출 현황</a>
+                <a href="diagram.html" class="tab-btn">🔄 업무 프로세스</a>
+                <a href="report.html" class="tab-btn active">🔍 사이트 분석</a>
+                <a href="design-guide.html" class="tab-btn">🎨 디자인 가이드</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="report-title">
+            <h1>📊 SubTrackr 사이트 분석 보고서</h1>
+            <p>구독 관리 웹앱 UI/UX 및 기능 분석</p>
+            <div class="report-meta">분석 대상: https://www.subtrac.kr | 분석 일자: 2026년 5월 14일</div>
+        </div>
+
+        <div class="cards-grid">
+            <!-- 사이트 구조 -->
+            <div class="card">
+                <h2 class="card-title">🏗️ 사이트 구조</h2>
+                <div class="card-content">
+                    <ul class="item-list">
+                        <li>
+                            <div class="item-bullet">1</div>
+                            <div class="item-text">
+                                <div class="item-title">Hero 섹션</div>
+                                <div class="item-desc">로그인 + 메인 배너로 "은행 연동 없이" 가치 제안 강조</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">2</div>
+                            <div class="item-text">
+                                <div class="item-title">대시보드</div>
+                                <div class="item-desc">월간 지출, 활성 구독, 다음 결제, 절약 팁 한눈에 표시</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">3</div>
+                            <div class="item-text">
+                                <div class="item-title">구독 관리</div>
+                                <div class="item-desc">카테고리 필터링, 캘린더 뷰, 가입일 기준 정렬</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">4</div>
+                            <div class="item-text">
+                                <div class="item-title">빠른 추가 & 계정 관리</div>
+                                <div class="item-desc">130+ 서비스 버튼 + 카드/계정 관리 섹션</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">5</div>
+                            <div class="item-text">
+                                <div class="item-title">교육 콘텐츠</div>
+                                <div class="item-desc">블로그: 구독 절약 팁, 서비스 비교, 해지 가이드</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 디자인 특징 -->
+            <div class="card">
+                <h2 class="card-title">🎨 디자인 특징</h2>
+                <div class="card-content">
+                    <ul class="item-list">
+                        <li>
+                            <div class="item-bullet">●</div>
+                            <div class="item-text">
+                                <div class="item-title">컬러 팔레트</div>
+                                <div class="item-desc">파란색/보라색 계열 (신뢰감), 흰색 배경 (미니멀)</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">●</div>
+                            <div class="item-text">
+                                <div class="item-title">레이아웃</div>
+                                <div class="item-desc">카드 기반 + 그리드 시스템, 충분한 공백</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">●</div>
+                            <div class="item-text">
+                                <div class="item-title">타이포그래피</div>
+                                <div class="item-desc">명확한 계층 구조, 가독성 좋은 글꼴 크기</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">●</div>
+                            <div class="item-text">
+                                <div class="item-title">반응형</div>
+                                <div class="item-desc">모바일/태블릿/데스크톱 최적화</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">●</div>
+                            <div class="item-text">
+                                <div class="item-title">아이콘 사용</div>
+                                <div class="item-desc">서비스별 로고 + 이모지로 시각적 신호 강화</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 주요 기능 -->
+            <div class="card">
+                <h2 class="card-title">⚡ 주요 기능</h2>
+                <div class="card-content">
+                    <ul class="item-list">
+                        <li>
+                            <div class="item-bullet">🤖</div>
+                            <div class="item-text">
+                                <div class="item-title">AI 자동 감지</div>
+                                <div class="item-desc">스크린샷 업로드 → 자동 구독 인식 (무료 사용자 1일 10회)</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">💰</div>
+                            <div class="item-text">
+                                <div class="item-title">재정 추적</div>
+                                <div class="item-desc">월간 지출, 예상 절약액, 결제 예정일 관리</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">📱</div>
+                            <div class="item-text">
+                                <div class="item-title">다중 계정</div>
+                                <div class="item-desc">여러 계정/카드 동시 관리 가능</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">📊</div>
+                            <div class="item-text">
+                                <div class="item-title">캘린더 뷰</div>
+                                <div class="item-desc">결제 예정일을 캘린더로 시각화</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">💾</div>
+                            <div class="item-text">
+                                <div class="item-title">데이터 백업</div>
+                                <div class="item-desc">JSON/CSV 내보내기, 기존 데이터와 병합</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 강점 -->
+            <div class="card">
+                <h2 class="card-title">✅ 잘한 점</h2>
+                <div class="pros-list">
+                    <ul class="item-list">
+                        <li>
+                            <div class="item-bullet">1</div>
+                            <div class="item-text">
+                                <div class="item-title">프라이버시 우선</div>
+                                <div class="item-desc">은행 연동 불필요, 데이터 기기 저장으로 신뢰 구축</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">2</div>
+                            <div class="item-text">
+                                <div class="item-title">자동화 수준이 높음</div>
+                                <div class="item-desc">AI가 수동 입력을 최소화해 사용자 부담 감소</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">3</div>
+                            <div class="item-text">
+                                <div class="item-title">직관적 대시보드</div>
+                                <div class="item-desc">핵심 정보(지출, 절약액, 결제)를 한 화면에 구성</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">4</div>
+                            <div class="item-text">
+                                <div class="item-title">글로벌 확장</div>
+                                <div class="item-desc">130+ 서비스, 11개 언어 지원으로 광범위한 활용</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">5</div>
+                            <div class="item-text">
+                                <div class="item-title">교육적 블로그</div>
+                                <div class="item-desc">사용자가 구독 절약 전략을 배울 수 있는 콘텐츠</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">6</div>
+                            <div class="item-text">
+                                <div class="item-title">접근성 좋음</div>
+                                <div class="item-desc">무료 모델 + 광고 지원으로 진입장벽 낮음</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 개선 가능한 점 -->
+            <div class="card">
+                <h2 class="card-title">💡 개선 가능한 점</h2>
+                <div class="cons-list">
+                    <ul class="item-list">
+                        <li>
+                            <div class="item-bullet">1</div>
+                            <div class="item-text">
+                                <div class="item-title">모바일 UI 최적화</div>
+                                <div class="item-desc">반응형이지만 모바일 터치 UI 개선 가능</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">2</div>
+                            <div class="item-text">
+                                <div class="item-title">다국어 일관성</div>
+                                <div class="item-desc">UI의 일부 요소가 영어로 남아있음 (한국어 완성도 개선)</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">3</div>
+                            <div class="item-text">
+                                <div class="item-title">알림 기능</div>
+                                <div class="item-desc">결제 예정 알림, 무료 체험 종료 알림 명확하지 않음</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">4</div>
+                            <div class="item-text">
+                                <div class="item-title">로컬 서비스 추가</div>
+                                <div class="item-desc">한국 특화 구독 서비스(라이프 스타일) 더 많이 필요</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">5</div>
+                            <div class="item-text">
+                                <div class="item-title">공유 및 협력 기능</div>
+                                <div class="item-desc">가족 구독 분할 관리, 비용 공유 기능 없음</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-bullet">6</div>
+                            <div class="item-text">
+                                <div class="item-title">고급 통계</div>
+                                <div class="item-desc">월별 비교, 카테고리별 분석 리포트 강화 가능</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 사용자 경험 평가 -->
+            <div class="card">
+                <h2 class="card-title">🎯 사용자 경험 (UX) 평가</h2>
+                <div class="card-content">
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="font-weight: 600;">진입장벽</span>
+                            <span style="color: #4caf50; font-weight: 600;">⭐⭐⭐⭐⭐ (5/5)</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.08); height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #7bc43f, #6ab030); height: 100%; width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="font-weight: 600;">인터페이스 명확성</span>
+                            <span style="color: #4caf50; font-weight: 600;">⭐⭐⭐⭐ (4/5)</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.08); height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #7bc43f, #6ab030); height: 100%; width: 80%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="font-weight: 600;">기능 완성도</span>
+                            <span style="color: #4caf50; font-weight: 600;">⭐⭐⭐⭐ (4/5)</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.08); height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #7bc43f, #6ab030); height: 100%; width: 80%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <span style="font-weight: 600;">시각 디자인</span>
+                            <span style="color: #4caf50; font-weight: 600;">⭐⭐⭐⭐⭐ (5/5)</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.08); height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #7bc43f, #6ab030); height: 100%; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 핵심 추천 사항 -->
+            <div class="card">
+                <h2 class="card-title">🔮 핵심 추천 사항</h2>
+                <div class="card-content">
+                    <div style="background: rgba(123, 196, 63, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <div style="font-weight: 600; color: #7bc43f; margin-bottom: 8px;">단기 (1-2개월)</div>
+                        <div style="font-size: 0.95em;">알림 시스템 강화 + 모바일 UI 개선 + 한국어 로컬화 완성</div>
+                    </div>
+
+                    <div style="background: rgba(123, 196, 63, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <div style="font-weight: 600; color: #7bc43f; margin-bottom: 8px;">중기 (3-6개월)</div>
+                        <div style="font-size: 0.95em;">고급 분석 대시보드 + 가족 공유 기능 + 자동 인식률 개선</div>
+                    </div>
+
+                    <div style="background: rgba(123, 196, 63, 0.1); padding: 15px; border-radius: 10px;">
+                        <div style="font-weight: 600; color: #7bc43f; margin-bottom: 8px;">장기 (6-12개월)</div>
+                        <div style="font-size: 0.95em;">데이터 자동 동기화 + 사회적 기능 + AI 추천 엔진</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 종합 평가 -->
+        <div class="summary-box">
+            <h2>📌 종합 평가</h2>
+            <div class="summary-text">
+                <p>SubTrackr는 <strong>구독 관리의 핵심 문제를 명확하게 해결</strong>하는 웹앱입니다. 은행 연동 없는 프라이버시 중심의 설계, AI 기반 자동 인식, 직관적인 대시보드를 통해 사용자 경험을 극대화했습니다.</p>
+                <p style="margin-top: 15px;"><strong>강점:</strong> 사용자 신뢰 (프라이버시), 자동화 수준, 미니멀 디자인, 무료 접근성</p>
+                <p style="margin-top: 10px;"><strong>개선 기회:</strong> 모바일 UI 고도화, 알림 시스템, 협력 기능, 한국 로컬화</p>
+                <p style="margin-top: 15px;"><strong>추천:</strong> 현재 상태에서도 충분히 유용하며, 단기 개선사항을 적용하면 경쟁력 있는 수준으로 도약 가능합니다. 특히 <em>AI 자동 감지</em> 기능과 <em>블로그 콘텐츠</em>는 경쟁 차별화 요소로 작용합니다.</p>
+
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; flex-wrap: wrap; gap: 10px;">
+                    <span class="tag">🎯 사용성 우수</span>
+                    <span class="tag">🔐 프라이버시</span>
+                    <span class="tag">🤖 AI 자동화</span>
+                    <span class="tag">💡 혁신적</span>
+                    <span class="tag">📈 성장 가능성</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+        });
+    </script>
+</body>
+</html>
